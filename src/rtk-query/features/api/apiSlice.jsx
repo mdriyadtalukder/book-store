@@ -5,6 +5,6 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "https://gutendex.com/"
     }),
-    tagTypes: ['allBook'],
+    tagTypes: ['allBook','singleBook'],
     endpoints: (builder) => ({})
 })

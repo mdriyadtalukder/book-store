@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetBooksQuery } from "../../rtk-query/features/books/booksApi";
 import Loading from "../loading/Loading";
 import Book from "./book/Book";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getOption, getPageNumber, getSearch } from "../../rtk-query/features/books/booksSlice";
 import { CiSearch } from "react-icons/ci";
 
@@ -13,6 +13,11 @@ const Books = () => {
     const dispatch = useDispatch();
 
 
+    useEffect(() => {
+        if (data) {
+            setLoading(false);
+        }
+    }, [data]);
 
 
     const handleNextPage = () => {
@@ -22,7 +27,6 @@ const Books = () => {
             const page = queryParams?.split('=')[1];
             dispatch(getPageNumber(page));
         }
-        setLoading(false);
     }
 
     const handlePrevPAge = () => {
@@ -32,7 +36,6 @@ const Books = () => {
             const page = queryParams?.split('=')[1];
             dispatch(getPageNumber(page));
         }
-        setLoading(false);
     }
 
     let content;
@@ -62,7 +65,7 @@ const Books = () => {
 
     const uniqueBValues = [...new Set(data?.results.flatMap(item => item.subjects))];
     return (
-        <div className="max-w-screen mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-20">
+        <div className="max-w-screen mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-20 overflow-hidden">
             <div className="  pt-4 flex sm:flex-row flex-col sm:gap-10 gap-3 justify-center items-center">
                 <select onChange={(e) => dispatch(getOption(e.target.value))} className="flex-1 max-w-44   outline-none focus:outline-none border-none p-2 rounded-lg ">
                     <option className="">All genre</option>
@@ -88,7 +91,9 @@ const Books = () => {
                 >
                     Prev page
                 </button>
-
+                <div className='font-bold text-gray-800'>
+                {pageNumber}
+            </div>
                 <button
                     className={`${!data?.next ? "bg-gray-300" : "bg-black"} rounded-lg text-white p-2 font-bold text-xs`}
                     disabled={!data?.next}

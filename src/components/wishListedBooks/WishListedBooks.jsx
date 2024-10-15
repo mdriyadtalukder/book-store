@@ -53,7 +53,7 @@ const WishListedBooks = () => {
     const uniqueBValues = [...new Set(entries?.flatMap(item => item.subjects))];
 
     return (
-        <div className="max-w-screen mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-20">
+        <div className="max-w-screen mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-20 overflow-hidden">
             <div className="  pt-4 flex sm:flex-row flex-col sm:gap-10 gap-3 justify-center items-center">
                 <select onChange={(e) => dispatch(getOption2(e.target.value))} className="flex-1 max-w-44   outline-none focus:outline-none border-none p-2 rounded-lg ">
                     <option className="">All genre</option>

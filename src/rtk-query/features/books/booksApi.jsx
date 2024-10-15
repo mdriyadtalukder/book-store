@@ -8,7 +8,14 @@ export const booksApi = apiSlice.injectEndpoints({
                 method: "GET"
             }),
             providesTags: ["allBook"]
+        }),
+        getBook: builder.query({
+            query: (id) => ({
+                url: `books/${id}`,
+                method: "GET"
+            }),
+            providesTags: ["singleBook"]
         })
     })
 })
-export const { useGetBooksQuery } = booksApi;
+export const { useGetBooksQuery,useGetBookQuery } = booksApi;

@@ -2,13 +2,20 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getWishList } from "../../../rtk-query/features/books/booksSlice";
+import { motion } from "framer-motion";
 
 const Book = ({ d }) => {
     const { wishlist } = useSelector((state) => state.books);
     const dispatch = useDispatch();
-    const exitsBook=wishlist.find((f)=>f?.id===d?.id);
+    const exitsBook = wishlist.find((f) => f?.id === d?.id);
     return (
-        <div className="col-span-1 cursor-pointer group bg-white  flex flex-col shadow-xl rounded-lg">
+        <motion.div initial={{ scale: 0 }}
+            animate={{ rotate: 360, scale: 1 }}
+            transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+            }} className="col-span-1 cursor-pointer group bg-white  flex flex-col shadow-xl rounded-lg">
             <div className="flex flex-col gap-2 w-full h-full">
                 <div className="w-full relative aspect-square overflow-hidden rounded-xl">
                     <img
@@ -51,7 +58,7 @@ const Book = ({ d }) => {
                 </div>
 
             </div>
-        </div>
+        </motion.div>
     );
 };
 
