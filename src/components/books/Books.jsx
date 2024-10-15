@@ -3,21 +3,23 @@ import { useGetBooksQuery } from "../../rtk-query/features/books/booksApi";
 import Loading from "../loading/Loading";
 import Book from "./book/Book";
 import { useEffect, useState } from "react";
-import { getOption, getPageNumber, getSearch } from "../../rtk-query/features/books/booksSlice";
+import { getAllOption, getOption, getPageNumber, getSearch } from "../../rtk-query/features/books/booksSlice";
 import { CiSearch } from "react-icons/ci";
 
 const Books = () => {
     const [loading, setLoading] = useState(false)
-    const { pageNumber, option, search } = useSelector((state) => state.books);
+    const { pageNumber, option, search, allOptions } = useSelector((state) => state.books);
     const { data, isLoading, isError, error } = useGetBooksQuery(pageNumber);
     const dispatch = useDispatch();
 
 
     useEffect(() => {
         if (data) {
+            const uniqueBValues = [...new Set(data?.results.flatMap(item => item.subjects))];
+            dispatch(getAllOption(uniqueBValues));
             setLoading(false);
         }
-    }, [data]);
+    }, [data, dispatch]);
 
 
     const handleNextPage = () => {
@@ -63,18 +65,18 @@ const Books = () => {
 
     }
 
-    const uniqueBValues = [...new Set(data?.results.flatMap(item => item.subjects))];
+
     return (
         <div className="max-w-screen mx-auto xl:px-20 md:px-10 sm:px-2 px-4 pt-20 overflow-hidden">
             <div className="  pt-4 flex sm:flex-row flex-col sm:gap-10 gap-3 justify-center items-center">
                 <select onChange={(e) => dispatch(getOption(e.target.value))} className="flex-1 max-w-44   outline-none focus:outline-none border-none p-2 rounded-lg ">
-                    <option className="">All genre</option>
-                    {uniqueBValues.map((value, idx) => (
-                        <option key={idx} value={value}>{value}</option>
+                    <option selected={option === "All genre"} className="">All genre</option>
+                    {allOptions?.map((value, idx) => (
+                        <option disabled={!data?.results.some(book => book.subjects.includes(value))} selected={option === value} key={idx} value={value}>{value}</option>
                     ))}
                 </select>
                 <div className="relative">
-                    <input onChange={(e) => dispatch(getSearch(e.target.value))} placeholder="Search by title..." type="text" className=" focus:outline-none p-1 rounded-full text-black " />
+                    <input defaultValue={search} onChange={(e) => dispatch(getSearch(e.target.value))} placeholder="Search by title..." type="text" className=" focus:outline-none p-1 rounded-full text-black " />
                     <CiSearch className="absolute top-1 right-4  text-2xl text-gray-400 " />
 
                 </div>
@@ -92,8 +94,8 @@ const Books = () => {
                     Prev page
                 </button>
                 <div className='font-bold text-gray-800'>
-                {pageNumber}
-            </div>
+                    {pageNumber}
+                </div>
                 <button
                     className={`${!data?.next ? "bg-gray-300" : "bg-black"} rounded-lg text-white p-2 font-bold text-xs`}
                     disabled={!data?.next}

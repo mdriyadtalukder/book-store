@@ -6,11 +6,13 @@ const initialState = {
     perPage: 8,
     totalEntries: 0,
     wishlist: JSON.parse(localStorage.getItem('wishlist')) || [],
-    option: "All genre",
-    search: "",
-    option2: "All genre",
-    search2: "",
-    pageNumber:1,
+    option: JSON.parse(localStorage.getItem('option')) || "All genre",
+    search: JSON.parse(localStorage.getItem('search')) || "",
+    option2: JSON.parse(localStorage.getItem('option2')) || "All genre",
+    search2: JSON.parse(localStorage.getItem('search2')) || "",
+    pageNumber: 1,
+    allOptions: JSON.parse(localStorage.getItem("allOption")) || [],
+    allOptions2: JSON.parse(localStorage.getItem("allOption2")) || [],
 };
 const booksSlice = createSlice({
 
@@ -54,20 +56,43 @@ const booksSlice = createSlice({
         },
         getOption: (state, action) => {
             state.option = action.payload;
+            localStorage.setItem('option', JSON.stringify(state.option))
         },
         getSearch: (state, action) => {
             state.search = action.payload;
+            localStorage.setItem('search', JSON.stringify(state.search))
         },
         getOption2: (state, action) => {
             state.option2 = action.payload;
+            localStorage.setItem('option2', JSON.stringify(state.option2))
         },
         getSearch2: (state, action) => {
             state.search2 = action.payload;
+            localStorage.setItem('search2', JSON.stringify(state.search2))
+
         },
-        getPageNumber:(state,action)=>{
-            state.pageNumber=action.payload;
+        getPageNumber: (state, action) => {
+            state.pageNumber = action.payload;
+        },
+        getAllOption: (state, action) => {
+            const newOptions = action.payload.filter(option =>
+                !state.allOptions.includes(option)
+            );
+            state.allOptions = [...state.allOptions, ...newOptions];
+            localStorage.setItem('allOption', JSON.stringify(state.allOptions))
+
+
+        },
+        getAllOption2: (state, action) => {
+            const newOptions = action.payload.filter(option =>
+                !state.allOptions2.includes(option)
+            );
+            state.allOptions2 = [...state.allOptions2, ...newOptions];
+            localStorage.setItem('allOption', JSON.stringify(state.allOptions2))
+
+
         }
     }
 })
 export default booksSlice.reducer;
-export const { setPage, setPerPage, setTotalEntries, nextPage, prevPage, getWishList, getActiveNav,getOption,getSearch,getOption2,getSearch2 ,getPageNumber} = booksSlice.actions
+export const { setPage, setPerPage, setTotalEntries, nextPage, prevPage, getWishList, getActiveNav, getOption, getSearch, getOption2, getSearch2, getPageNumber, getAllOption, getAllOption2 } = booksSlice.actions

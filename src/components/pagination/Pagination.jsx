@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { nextPage, prevPage } from "../../rtk-query/features/books/booksSlice";
 
-const Pagination = ({ wishlists }) => {
+const Pagination = () => {
     const navigate = useNavigate();
     const { currentPage, perPage, totalEntries } = useSelector((state) => state.books);
     const dispatch = useDispatch();
@@ -12,14 +12,7 @@ const Pagination = ({ wishlists }) => {
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             dispatch(newPage > currentPage ? nextPage() : prevPage())
-            if (wishlists) {
-                navigate(`/wishList/?wishListedPage=${newPage}&wishListedPer_page=${perPage}`)
-
-            }
-            else {
-                navigate(`/?page=${newPage}&per_page=${perPage}`)
-
-            }
+            navigate(`/wishList/?wishListedPage=${newPage}&wishListedPer_page=${perPage}`)
         }
     }
     return (
